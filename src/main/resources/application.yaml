@@ -1,3 +1,24 @@
 spring:
   application:
     name: daisquina
+
+  #banco de dados
+  datasource:
+    url: jdbc:h2:mem:test_h2_db
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  #JPA
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  #console H2
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
