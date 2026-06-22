@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import org.antlr.v4.runtime.misc.NotNull;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ public class Product {
     @NotBlank
     private String description;
 
-    @NotBlank
+    @NotNull
     @Min(1)
     private BigDecimal price;
 
