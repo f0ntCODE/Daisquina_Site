@@ -1,15 +1,13 @@
 package edu.commerce.daisquina.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 public class Product {
@@ -23,6 +21,9 @@ public class Product {
 
     @NotBlank
     private String description;
+
+    @Version
+    private Long version;
 
     @NotNull
     @Min(1)
@@ -71,6 +72,23 @@ public class Product {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Long getVersion(){
+        return version;
+    };
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null || getClass() != o.getClass()) return false;
+        Product that =  (Product) o;
+
+        return getID() == that.getID();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getID());
     }
 
 }

@@ -3,6 +3,8 @@ package edu.commerce.daisquina.views;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -13,9 +15,10 @@ import edu.commerce.daisquina.entity.Product;
 import edu.commerce.daisquina.repository.ProductDetailsRepository;
 import edu.commerce.daisquina.repository.ProductRepo;
 import edu.commerce.daisquina.views.drawer.ProductFormDrawer;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 @Route("")
-@PageTitle("Formulário de Cadastro de Produtos")
+@PageTitle("Catálogo de Produtos")
 public class BasicForm extends HorizontalLayout {
 
     public BasicForm(ProductRepo repository, ProductDetailsRepository detailsRepository) {
@@ -33,16 +36,21 @@ public class BasicForm extends HorizontalLayout {
                 .setHeader("Código");
     grid.addColumn(Product::getName)
                 .setHeader("Nome")
-                .setSortProperty("Nome");
+                .setSortProperty("name");
         grid.addColumn(Product::getDescription)
                 .setHeader("Descrição")
-                .setSortProperty("Descricao");
+                .setSortProperty("description");
         grid.addColumn(Product::getPrice)
                 .setHeader("Preço")
                 .setTextAlign(ColumnTextAlign.END)
-                .setSortProperty("Preço");
+                .setSortProperty("price");
 
-        var drawer = new ProductFormDrawer();
+        var drawer = new ProductFormDrawer(product -> {
+            var saved = detailsRepository.save(product);
+            grid.getDataProvider().refreshAll();
+
+            return saved;
+        }, this::handleException);
 
         grid.setItemsPageable(pageable ->
             repository
@@ -68,6 +76,25 @@ public class BasicForm extends HorizontalLayout {
         grid.setSizeFull();
         add(listLayout, drawer);
         setFlexShrink(0, drawer);
+
+    }
+
+    private void handleException(RuntimeException ex) {
+        if(ex instanceof OptimisticLockingFailureException){
+            var notification = new Notification(
+                    "Outro usuário já editou este produto. " +
+                            "Por favor, atualize a página e tente novamente.");
+
+            notification.setPosition(Notification.Position.MIDDLE);
+            notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+            notification.setDuration(3000);
+            notification.open();
+
+        }else{
+
+            throw ex;
+
+        }
 
     }
 }
