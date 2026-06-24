@@ -25,11 +25,11 @@ public class ProductService {
         }
 
         Product newProduct = new Product();
-        product.setName(product.getName());
-        product.setDescription(product.getDescription());
-        product.setPrice(product.getPrice());
-        product.setImage(product.getImage());
+        newProduct.setName(product.getName());
+        newProduct.setDescription(product.getDescription());
+        newProduct.setPrice(product.getPrice());
+        newProduct.setImage(product.getImage());
 
-        return productRepo.save(product);
+        return productRepo.save(newProduct);
     }
 }

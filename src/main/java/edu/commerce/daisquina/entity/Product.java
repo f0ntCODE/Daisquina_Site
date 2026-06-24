@@ -30,7 +30,8 @@ public class Product {
 
     private String image;
 
-    public Product() {}
+    public Product() {
+    }
 
     public long getID() {
         return ID;
@@ -71,4 +72,5 @@ public class Product {
     public void setImage(String image) {
         this.image = image;
     }
+
 }
