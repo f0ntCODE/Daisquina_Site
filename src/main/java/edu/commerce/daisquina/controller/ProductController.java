@@ -2,11 +2,9 @@ package edu.commerce.daisquina.controller;
 
 import edu.commerce.daisquina.entity.Product;
 import edu.commerce.daisquina.service.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/product")
@@ -31,7 +29,23 @@ public class ProductController {
 
         Product created = productService.createNewProduct(product);
 
-        return  ResponseEntity.ok().body(created);
+        return  ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<Product> editProduct(@PathVariable Long id, @RequestBody Product product){
+
+        Product updated = productService.editProduct(id, product);
+
+        return ResponseEntity.ok().body(updated);
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
+
+        productService.deleteProduct(id);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
 }
